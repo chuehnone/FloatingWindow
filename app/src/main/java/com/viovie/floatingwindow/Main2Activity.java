@@ -35,11 +35,12 @@ public class Main2Activity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_minimize:
-                MainActivity.showView();
+                FloatingViewBuilder.getInstance().showFloatingView();
                 moveTaskToBack(true);
                 return true;
 
             case android.R.id.home:
+                FloatingViewBuilder.getInstance().destroy();
                 finish();
                 return true;
         }
@@ -48,7 +49,7 @@ public class Main2Activity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        MainActivity.showView();
+        FloatingViewBuilder.getInstance().showFloatingView();
         super.onBackPressed();
     }
 }
