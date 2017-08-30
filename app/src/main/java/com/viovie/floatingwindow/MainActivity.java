@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private void createFloatingWindow() {
         if (mFloatingView != null) return;
         mFloatingView = new FloatingActionButton(this);
-        mFloatingView.setImageResource(android.R.drawable.ic_media_play);
+        mFloatingView.setImageResource(R.drawable.ic_open_in_new);
 
         mWM = (WindowManager) getApplicationContext().getSystemService(
                 Context.WINDOW_SERVICE);
