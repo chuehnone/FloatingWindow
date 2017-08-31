@@ -3,6 +3,8 @@ package com.viovie.floatingwindow;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,7 +19,7 @@ public class FloatingViewBuilder implements View.OnTouchListener {
         private static final FloatingViewBuilder INSTANCE = new FloatingViewBuilder();
     }
 
-    private Context mContext;
+    private Handler mHandler;
     private FloatingActionButton mFloatingView;
     private WindowManager mWM;
     private WindowManager.LayoutParams mParams;
@@ -55,6 +57,21 @@ public class FloatingViewBuilder implements View.OnTouchListener {
         mParams.format = PixelFormat.RGBA_8888;
 
         mFloatingView.setOnTouchListener(this);
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (mFloatingView != null) {
+                    switch (msg.what) {
+                        case 0:
+                            mFloatingView.setVisibility(View.GONE);
+                            break;
+                        case 1:
+                            mFloatingView.setVisibility(View.VISIBLE);
+                            break;
+                    }
+                }
+            }
+        };
 
         mWM.addView(mFloatingView, mParams);
     }
@@ -84,7 +101,9 @@ public class FloatingViewBuilder implements View.OnTouchListener {
                     if (mOnClickListener != null) {
                         mOnClickListener.onClick();
                     }
-                    view.setVisibility(View.GONE);
+                    if (mHandler != null) {
+                        mHandler.sendEmptyMessage(0);
+                    }
                 }
                 break;
         }
@@ -92,8 +111,8 @@ public class FloatingViewBuilder implements View.OnTouchListener {
     }
 
     public boolean showFloatingView() {
-        if (mFloatingView != null) {
-            mFloatingView.setVisibility(View.VISIBLE);
+        if (mHandler != null) {
+            mHandler.sendEmptyMessage(1);
             return true;
         }
         return false;
@@ -103,9 +122,14 @@ public class FloatingViewBuilder implements View.OnTouchListener {
         if (mWM != null && mFloatingView != null) {
             mWM.removeView(mFloatingView);
         }
+        if (mHandler != null) {
+            mHandler.removeMessages(0);
+            mHandler.removeMessages(1);
+            mHandler = null;
+        }
         mOnClickListener = null;
         mWM = null;
+        mParams = null;
         mFloatingView = null;
-        mContext = null;
     }
 }
