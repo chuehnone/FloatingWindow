@@ -2,7 +2,6 @@ package com.viovie.floatingwindow;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
@@ -43,12 +42,12 @@ public class FloatingViewBuilder implements View.OnTouchListener {
         mWM = (WindowManager) context.getApplicationContext().getSystemService(
                 Context.WINDOW_SERVICE);
 
-        mParams = new WindowManager.LayoutParams();
-        if (Build.VERSION.SDK_INT >= 19) {
-            mParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-        } else {
-            mParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-        }
+        mParams = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
 
         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
